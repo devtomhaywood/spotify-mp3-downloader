@@ -27,21 +27,34 @@ class SpotifyCommands:
 		return response
 
 
-	def get_playlist(self, playlist):
+	def get_playlist_info(self, playlist):
 		self.__refresh_access_token()
-		url = "https://api.spotify.com/v1/playlists/{0}/tracks".format(playlist)
+		url = "https://api.spotify.com/v1/playlists/{}".format(playlist)
 		header = {
 			"Authorization": "Bearer " + self.access_token
 		}
 		response = requests.get(
 			url=url, headers=header
 		).json()
+		
+		return response
 
+
+	def get_playlist_items(self, playlist):
+		self.__refresh_access_token()
+		url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlist)
+		header = {
+			"Authorization": "Bearer " + self.access_token
+		}
+		response = requests.get(
+			url=url, headers=header
+		).json()
+		
 		return response
 	
 	
 	def get_playlist_tracks(self, playlist):
-		result = self.get_playlist(playlist)	
+		result = self.get_playlist_items(playlist)	
 		tracks = []
 		
 		for item in result["items"]:
