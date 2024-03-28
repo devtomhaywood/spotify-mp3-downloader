@@ -53,15 +53,15 @@ class SpotifyCommands:
 		return response
 	
 	
-	def get_playlist_tracks(self, playlist):
-		result = self.get_playlist_items(playlist)	
-		tracks = []
+	# def get_playlist_tracks(self, playlist):
+	# 	result = self.get_playlist_items(playlist)	
+	# 	tracks = []
 		
-		for item in result["items"]:
-			track = item["track"]["artists"][0]["name"] + " - " + item["track"]["name"] 
-			tracks.append(track)
+	# 	for item in result["items"]:
+	# 		track = item["track"]["artists"][0]["name"] + " - " + item["track"]["name"] 
+	# 		tracks.append(track)
 		
-		return tracks
+	# 	return tracks
 	
 	
 	def __refresh_access_token(self):
@@ -72,14 +72,14 @@ class SpotifyCommands:
 		self.access_token = ref.refresh()
 
 
-class YoutubeCommands:
+class DownloadCommands:
 
 
 	def __init__(self):
-		pass
+		self.tracks = []
 	
 	
-	def get_links(self, tracks):
+	def get_track_links(self, tracks):
 		track_count = len(tracks)
 		
 		links = []
@@ -94,13 +94,13 @@ class YoutubeCommands:
 		
 		print("Successfully found... {} links out of {} tracks.".format(link_count, track_count))		
 			
-		return links
+		self.tracks = links
 	
 	
-	def download_links(self, path, tracks):
+	def download_links(self, path):
 		print("Downloading links to... {}".format(path))
 		
-		for track in tracks:
+		for track in self.tracks:
 		
 			track = YouTube(track)
 			video = track.streams.filter(only_audio=True).first()
@@ -118,10 +118,10 @@ class YoutubeCommands:
 			am i stupid?
 		'''
 		
+		
+	def convert_to_mp3(self, path):
 		for track in os.listdir(path):
 			f = path + "/" + track
-			subprocess.run(["ffmpeg", "-i", "{}".format(f), "{}".format(f[:-4] + ".mp3")])
+			subprocess.run(["ffmpeg", "-i","{}".format(f), "{}".format(f[:-4] + ".mp3")])
 			os.remove(f)
-		
-		print("Files succesfully downloaded!")
 	
